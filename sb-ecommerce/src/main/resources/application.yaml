@@ -3,6 +3,12 @@ spring:
     name: sb-ecommerce
   datasource:
     url: jdbc:h2:mem:testdb
+  jpa:
+    show-sql: true
+#    properties:
+#      hibernate:
+#        ddl-auto: update
+#        format_sql: true
   h2:
     console:
       enabled: true
