@@ -14,7 +14,6 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
-    private Long nextId = 1L;
 
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
@@ -27,7 +26,6 @@ public class CategoryController {
 
     @PostMapping("/public/categories")
     public ResponseEntity<String> createCategory(@RequestBody Category category) {
-        category.setCategoryId(nextId++);
         categoryService.createCategory(category);
         return new ResponseEntity<>("Category added successfully!", HttpStatus.CREATED);
     }
