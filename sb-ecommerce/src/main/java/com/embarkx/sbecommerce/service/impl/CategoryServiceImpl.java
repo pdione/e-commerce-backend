@@ -3,8 +3,11 @@ package com.embarkx.sbecommerce.service.impl;
 import com.embarkx.sbecommerce.exception.ApiException;
 import com.embarkx.sbecommerce.exception.ResourceNotFoundException;
 import com.embarkx.sbecommerce.model.Category;
+import com.embarkx.sbecommerce.payload.request.CategoryDTO;
+import com.embarkx.sbecommerce.payload.response.CategoryResponse;
 import com.embarkx.sbecommerce.repository.CategoryRepository;
 import com.embarkx.sbecommerce.service.CategoryService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,21 +22,28 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
-    public List<Category> getAllCategories() {
+    public CategoryResponse getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         if (categories.isEmpty()){
             throw new ApiException("No category created till now.");
         }
-        return categories;
+        List<CategoryDTO> categoryDTOS = categories
+                .stream().map(category -> modelMapper.map(category, CategoryDTO.class)).toList();
+        return new CategoryResponse(categoryDTOS);
     }
 
     @Override
-    public void createCategory(Category category) {
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+        Category category = modelMapper.map(categoryDTO, Category.class);
         if (categoryRepository.existsByCategoryName(category.getCategoryName())) {
             throw new ApiException("Category with name " + category.getCategoryName() + " already exists");
         }
-        categoryRepository.save(category);
+        Category savedCategory = categoryRepository.save(category);
+        return modelMapper.map(savedCategory, CategoryDTO.class);
     }
 
     @Override
