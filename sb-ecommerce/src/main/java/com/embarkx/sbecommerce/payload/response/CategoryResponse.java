@@ -12,5 +12,10 @@ import java.util.List;
 public class CategoryResponse {
 
     List<CategoryDTO> content;
+    Integer pageNumber;
+    Integer pageSize;
+    Long totalElements;
+    Integer totalPages;
+    Boolean last;
 
 }

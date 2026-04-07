@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,17 +30,29 @@ public class CategoryServiceImpl implements CategoryService {
     private ModelMapper modelMapper;
 
     @Override
-    public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize) {
+    public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
 
-        Pageable pageDetails = PageRequest.of(pageNumber, pageSize);
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+
         Page<Category> categoriesPage = categoryRepository.findAll(pageDetails);
         List<Category> categories = categoriesPage.getContent();
-        if (categories.isEmpty()){
+        if (categories.isEmpty()) {
             throw new ApiException("No category created till now.");
         }
         List<CategoryDTO> categoryDTOS = categories
                 .stream().map(category -> modelMapper.map(category, CategoryDTO.class)).toList();
-        return new CategoryResponse(categoryDTOS);
+        CategoryResponse categoryResponse = new CategoryResponse();
+        categoryResponse.setContent(categoryDTOS);
+        categoryResponse.setPageNumber(pageNumber);
+        categoryResponse.setPageSize(pageSize);
+        categoryResponse.setTotalElements(categoriesPage.getTotalElements());
+        categoryResponse.setTotalPages(categoriesPage.getTotalPages());
+        categoryResponse.setLast(categoriesPage.isLast());
+        return categoryResponse;
+        //return new CategoryResponse(categoryDTOS);
     }
 
     @Override
@@ -72,7 +85,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category categoryEntity = modelMapper.map(categoryDto, Category.class);
         categoryEntity.setCategoryId(categoryId);
 
-        Category savedEntity =  categoryRepository.save(categoryEntity);
+        Category savedEntity = categoryRepository.save(categoryEntity);
         return modelMapper.map(savedEntity, CategoryDTO.class);
     }
 

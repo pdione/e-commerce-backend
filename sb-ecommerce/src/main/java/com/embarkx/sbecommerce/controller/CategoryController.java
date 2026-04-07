@@ -1,6 +1,6 @@
 package com.embarkx.sbecommerce.controller;
 
-import com.embarkx.sbecommerce.model.Category;
+import com.embarkx.sbecommerce.config.AppConstants;
 import com.embarkx.sbecommerce.payload.request.CategoryDTO;
 import com.embarkx.sbecommerce.payload.response.CategoryResponse;
 import com.embarkx.sbecommerce.service.CategoryService;
@@ -20,9 +20,11 @@ public class CategoryController {
     }
 
     @GetMapping("/public/categories")
-    public ResponseEntity<CategoryResponse> getAllCategories(@RequestParam(name = "pageNumber") Integer pageNumber,
-                                                             @RequestParam(name = "pageSize") Integer pageSize) {
-        return new ResponseEntity<>(categoryService.getAllCategories(pageNumber, pageSize), HttpStatus.OK);
+    public ResponseEntity<CategoryResponse> getAllCategories(@RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER) Integer pageNumber,
+                                                             @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE) Integer pageSize,
+                                                             @RequestParam(name= "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY) String sortBy,
+                                                             @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_DIR) String sortOrder) {
+        return new ResponseEntity<>(categoryService.getAllCategories(pageNumber, pageSize, sortBy, sortOrder), HttpStatus.OK);
     }
 
     @PostMapping("/public/categories")
