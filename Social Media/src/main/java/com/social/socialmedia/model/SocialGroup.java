@@ -8,20 +8,25 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class SocialGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany(mappedBy = "socialGroups")
+    @ManyToMany(mappedBy = "groups")
     @JsonIgnore
     private Set<SocialUser> socialUsers = new HashSet<>();
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(id);
+    }
 }

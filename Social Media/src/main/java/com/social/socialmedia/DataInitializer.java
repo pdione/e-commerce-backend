@@ -57,10 +57,10 @@ public class DataInitializer {
             groupRepository.save(group2);
 
             // Associate users with groups
-            user1.getSocialGroups().add(group1);
-            user2.getSocialGroups().add(group1);
-            user2.getSocialGroups().add(group2);
-            user3.getSocialGroups().add(group2);
+            user1.getGroups().add(group1);
+            user2.getGroups().add(group1);
+            user2.getGroups().add(group2);
+            user3.getGroups().add(group2);
 
             // Save users back to database to update associations
             userRepository.save(user1);
@@ -89,9 +89,9 @@ public class DataInitializer {
             SocialProfile profile3 = new SocialProfile();
 
             // Associate profiles with users
-            profile1.setSocialUser(user1);
-            profile2.setSocialUser(user2);
-            profile3.setSocialUser(user3);
+            profile1.setUser(user1);
+            profile2.setUser(user2);
+            profile3.setUser(user3);
 
             // Save profiles to the database (assuming you have a SocialProfileRepository)
             socialProfileRepository.save(profile1);

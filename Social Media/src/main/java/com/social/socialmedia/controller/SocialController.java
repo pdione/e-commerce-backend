@@ -1,5 +1,6 @@
 package com.social.socialmedia.controller;
 
+
 import com.social.socialmedia.model.SocialUser;
 import com.social.socialmedia.service.SocialService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +12,22 @@ import java.util.List;
 
 @RestController
 public class SocialController {
-
     @Autowired
     private SocialService socialService;
 
     @GetMapping("/social/users")
-    public ResponseEntity<List<SocialUser>> getAllUsers() {
+    public ResponseEntity<List<SocialUser>> getUsers(){
         return new ResponseEntity<>(socialService.getAllUsers(), HttpStatus.OK);
     }
 
     @PostMapping("/social/users")
-    public ResponseEntity<SocialUser> saveUser(@RequestBody SocialUser socialUser) {
+    public ResponseEntity<SocialUser> saveUser(@RequestBody SocialUser socialUser){
         return new ResponseEntity<>(socialService.saveUser(socialUser), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/social/users/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId){
+        socialService.deleteUser(userId);
+        return new ResponseEntity<>("Deleted Successfully", HttpStatus.CREATED);
     }
 }

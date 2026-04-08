@@ -3,26 +3,22 @@ package com.social.socialmedia.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class SocialUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "socialUser", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
+    //@JoinColumn(name = "social_profile_id")
     private SocialProfile socialProfile;
 
     @OneToMany(mappedBy = "socialUser")
@@ -34,10 +30,16 @@ public class SocialUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id")
     )
-    private Set<SocialGroup> socialGroups = new HashSet<>();
+    private Set<SocialGroup> groups = new HashSet<>();
 
-    private void setSocialProfile(SocialProfile socialProfile) {
-        socialProfile.setSocialUser(this);
-        this.socialProfile = socialProfile;
+    // This method is used for handling the bidirectional relationship between SocialUser and SocialProfile
+    public void setSocialProfile(){
+        this.socialProfile.setUser(this);
+    }
+
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(id);
     }
 }

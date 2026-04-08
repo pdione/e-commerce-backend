@@ -17,9 +17,10 @@ public class SocialProfile {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "social_user")
     @JsonIgnore
-    private SocialUser socialUser;
+    private SocialUser user;
 
     private String description;
+
 }
