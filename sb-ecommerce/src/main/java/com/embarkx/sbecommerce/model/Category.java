@@ -19,8 +19,6 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
 
-    @NotBlank(message = "Category name cannot be blank")
-    @Size(min = 5, message = "Category name must be at least 5 characters long")
     private String categoryName;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
