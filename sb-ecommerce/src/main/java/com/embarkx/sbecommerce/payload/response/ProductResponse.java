@@ -13,4 +13,9 @@ import java.util.List;
 public class ProductResponse {
 
     private List<ProductDTO> content;
+    Integer pageNumber;
+    Integer pageSize;
+    Long totalElements;
+    Integer totalPages;
+    Boolean last;
 }
