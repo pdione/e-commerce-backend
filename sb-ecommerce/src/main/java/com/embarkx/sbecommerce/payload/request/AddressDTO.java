@@ -1,24 +1,17 @@
-package com.embarkx.sbecommerce.model;
+package com.embarkx.sbecommerce.payload.request;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-@Entity
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "addresses")
-public class Address {
+public class AddressDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long addressId;
 
     @NotBlank
@@ -45,16 +38,4 @@ public class Address {
     @Size(min = 5, message = "Pincode name must be at least 5 characters long")
     private String pincode;
 
-    @ToString.Exclude
-    @ManyToOne
-    private User user;
-
-    public Address(String street, String buildingName, String city, String state, String country, String pincode) {
-        this.street = street;
-        this.buildingName = buildingName;
-        this.city = city;
-        this.state = state;
-        this.country = country;
-        this.pincode = pincode;
-    }
 }

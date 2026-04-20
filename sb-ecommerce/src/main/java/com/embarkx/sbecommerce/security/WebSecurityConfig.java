@@ -53,14 +53,14 @@ public class WebSecurityConfig {
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((requests) ->
-                        // requests.requestMatchers("/h2-console/**").permitAll() Spring Security 6
-                        requests.requestMatchers(toH2Console()).permitAll()
-                                .requestMatchers("/api/auth/**").permitAll()
+                                // requests.requestMatchers("/h2-console/**").permitAll() Spring Security 6
+                                //requests.requestMatchers(toH2Console()).permitAll()
+                                requests.requestMatchers("/api/auth/**").permitAll()
 //                                .requestMatchers("/api/public/**").permitAll()
 //                                .requestMatchers("/api/admin/**").permitAll()
-                                .requestMatchers("/api/test/**").permitAll()
-                                .requestMatchers("/images/**").permitAll()
-                                .anyRequest().authenticated()
+                                        .requestMatchers("/api/test/**").permitAll()
+                                        .requestMatchers("/images/**").permitAll()/**/
+                                        .anyRequest().authenticated()
                 )
                 .authenticationProvider(daoAuthenticationProvider())
                 // To allow frames from the same origin
