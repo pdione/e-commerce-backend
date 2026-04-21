@@ -4,6 +4,13 @@ import com.embarkx.sbecommerce.config.AppConstants;
 import com.embarkx.sbecommerce.payload.request.CategoryDTO;
 import com.embarkx.sbecommerce.payload.response.CategoryResponse;
 import com.embarkx.sbecommerce.service.CategoryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Categories APIs", description = "Managing Categories API")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -20,6 +28,7 @@ public class CategoryController {
     }
 
     @GetMapping("/public/categories")
+    @Operation(summary = "Get all categories", description = "API to Get all categories")
     public ResponseEntity<CategoryResponse> getAllCategories(@RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER) Integer pageNumber,
                                                              @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE) Integer pageSize,
                                                              @RequestParam(name= "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY) String sortBy,
@@ -28,13 +37,22 @@ public class CategoryController {
     }
 
     @PostMapping("/public/categories")
-    public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO category) {
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Category created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
+    public ResponseEntity<CategoryDTO> createCategory(
+            @Parameter(description = "Category details")
+            @Valid @RequestBody CategoryDTO category) {
         CategoryDTO savedCategory = categoryService.createCategory(category);
         return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/admin/categories/{categoryId}")
-    public ResponseEntity<CategoryDTO> deleteCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<CategoryDTO> deleteCategory(
+            @Parameter(description = "Id of the category to delete")
+            @PathVariable Long categoryId) {
         CategoryDTO deletedCategory = categoryService.deleteCategory(categoryId);
         return ResponseEntity.ok(deletedCategory);
     }
