@@ -28,8 +28,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.util.Set;
 
-import static org.springframework.boot.security.autoconfigure.web.servlet.PathRequest.toH2Console;
-
 @Configuration
 @EnableWebSecurity
 // @EnableMethodSecurity
@@ -92,11 +90,11 @@ public class WebSecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(
-                "/v2/api-docs",
+                "/v3/api-docs/**",
                 "/configuration/ui",
                 "/swagger-resources/**",
                 "/configuration/security",
-                "/swagger-ui.html",
+                "/swagger-ui/**",
                 "/webjars/**");
     }
 
